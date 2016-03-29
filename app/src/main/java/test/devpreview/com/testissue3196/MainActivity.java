@@ -2,8 +2,11 @@ package test.devpreview.com.testissue3196;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.admin.DevicePolicyManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
@@ -112,7 +115,6 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-
     public static SecurityType getSecurity(WifiConfiguration config)
     {
         if (config.allowedKeyManagement.get(WifiConfiguration.KeyMgmt.WPA_PSK))
@@ -125,5 +127,17 @@ public class MainActivity extends AppCompatActivity
             return SecurityType.SECURITY_EAP;
         }
         return (config.wepKeys[0] != null) ? SecurityType.SECURITY_WEP : SecurityType.SECURITY_NONE;
+    }
+
+    public void getDeviceAdmin(View view)
+    {
+        ComponentName admin = new ComponentName(this, AdminReceiver.class);
+
+        Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+        intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, admin);
+        intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,
+                "Additional text explaining why this needs to be added.");
+
+        startActivity(intent);
     }
 }
